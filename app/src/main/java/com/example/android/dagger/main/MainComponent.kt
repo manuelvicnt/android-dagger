@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package com.example.android.dagger.settings
+package com.example.android.dagger.main
 
-import com.example.android.dagger.user.UserDataRepository
-import com.example.android.dagger.user.UserManager
-import javax.inject.Inject
+import com.example.android.dagger.di.ActivityScope
+import dagger.Subcomponent
 
-/**
- * SettingsViewModel is the ViewModel that [SettingsActivity] uses to handle complex logic.
- */
-class SettingsViewModel @Inject constructor(
-    private val userDataRepository: UserDataRepository,
-    private val userManager: UserManager
-) {
+// Scope annotation that the MainComponent uses
+// Classes annotated with @ActivityScope will have a unique instance in this Component
+@ActivityScope
+// Definition of a Dagger subcomponent
+@Subcomponent
+interface MainComponent {
 
-    fun refreshNotifications() {
-        userDataRepository.refreshUnreadNotifications()
+    // Factory to create instances of MainComponent
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): MainComponent
     }
 
-    fun logout() {
-        userManager.logout()
-    }
+    // Classes that can be injected by this Component
+    fun inject(activity: MainActivity)
 }

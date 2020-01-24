@@ -25,7 +25,6 @@ import com.example.android.dagger.MyApplication
 import com.example.android.dagger.R
 import com.example.android.dagger.login.LoginActivity
 import com.example.android.dagger.registration.RegistrationActivity
-import com.example.android.dagger.settings.SettingsActivity
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -44,6 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         // Grabs instance of UserManager from the application graph
         val userManager = (application as MyApplication).appComponent.userManager()
+
         if (!userManager.isUserLoggedIn()) {
             if (!userManager.isUserRegistered()) {
                 startActivity(Intent(this, RegistrationActivity::class.java))
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
 
             // If the MainActivity needs to be displayed, we get the UserComponent from the
             // application graph and gets this Activity injected
-            userManager.userComponent!!.inject(this)
+            (application as MyApplication).appComponent.mainComponent().create().inject(this)
             setupViews()
         }
     }
@@ -73,7 +73,8 @@ class MainActivity : AppCompatActivity() {
     private fun setupViews() {
         findViewById<TextView>(R.id.hello).text = mainViewModel.welcomeText
         findViewById<Button>(R.id.logout).setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
+            mainViewModel.logout()
+            startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 }

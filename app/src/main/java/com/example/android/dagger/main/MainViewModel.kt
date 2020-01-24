@@ -16,7 +16,7 @@
 
 package com.example.android.dagger.main
 
-import com.example.android.dagger.user.UserDataRepository
+import com.example.android.dagger.user.UserManager
 import javax.inject.Inject
 
 /**
@@ -26,11 +26,15 @@ import javax.inject.Inject
  * @Inject tells Dagger how to provide instances of this type. Dagger also knows
  * that UserDataRepository is a dependency.
  */
-class MainViewModel @Inject constructor(private val userDataRepository: UserDataRepository) {
+class MainViewModel @Inject constructor(private val userManager: UserManager) {
 
     val welcomeText: String
-        get() = "Hello ${userDataRepository.username}!"
+        get() = "Hello ${userManager.loggedInUser?.username}!"
 
     val notificationsText: String
-        get() = "You have ${userDataRepository.unreadNotifications} unread notifications"
+        get() = "You have ${userManager.loggedInUser?.unreadNotifications} unread notifications"
+
+    fun logout() {
+        userManager.logout()
+    }
 }
